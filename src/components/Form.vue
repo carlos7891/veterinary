@@ -1,4 +1,30 @@
-<script setup></script>
+<script setup>
+  import { reactive } from 'vue'
+  import Alert from './Alert.vue'
+
+  const alert = reactive ({
+    type:'',
+    message:''
+  })
+
+  const patient = reactive({
+    name:'',
+    owner:'',
+    email:'',
+    date:'',
+    symptoms:''
+  })
+
+  const validateForm = () => {
+    if(Object.values(patient).includes('')){
+      alert.message = 'Todos los campos son obligatorios'
+      alert.type = 'error'
+      return
+    }
+    console.log('enviando');
+  }
+
+</script>
 
 <template>
   <div class="md:w-1/2 text-black dark:text-white">
@@ -7,7 +33,11 @@
       Añade pacientes y
       <span class="text-indigo-600 font-bold">Adminístralos</span>
     </p>
-    <form>
+    <Alert 
+      v-if="alert.message"
+      :alert = "alert"
+    />
+    <form @submit.prevent="validateForm">
       <div class="mb-6">
         <label
           for="pet_name"
@@ -19,7 +49,7 @@
           id="pet_name"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="Nombre de la mascota"
-          required
+          v-model="patient.name"
         />
       </div>
       <div class="mb-6">
@@ -33,7 +63,7 @@
           id="owner_name"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="Nombre del propietario"
-          required
+          v-model="patient.owner"
         />
       </div>
       <div class="mb-6">
@@ -47,7 +77,7 @@
           id="email"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="juan123@yopmail.com"
-          required
+          v-model="patient.email"
         />
       </div>
       <div class="mb-6">
@@ -57,19 +87,13 @@
           >Alta</label
         >
         <div class="relative max-w-sm">
-          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-              </svg>
-          </div>
-          <input  id="release_date" 
-                  datepicker 
-                  datepicker-autohide 
-                  datepicker-format="dd/mm/yyyy"
-                  type="text"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                  placeholder="Select date"
-          >
+          <input
+            type="date"
+            id="release_date"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="juan123@yopmail.com"
+            v-model="patient.date"
+          />
         </div>
       </div>
       <div class="mb-6">
@@ -83,7 +107,7 @@
           id="symptoms"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 h-40"
           placeholder="Describe los sintomas"
-          required
+          v-model="patient.symptoms"
         />
       </div>
       <button
