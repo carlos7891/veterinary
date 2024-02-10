@@ -1,13 +1,26 @@
 <script setup>
   import Header from './components/Header.vue'
   import Form from './components/Form.vue'
+  import { ref } from 'vue'
+
+  const patients = ref ([])
+
 </script>
 
 <template>
   <div class="container mx-auto mt-20">
     <Header/>
-    <div class="mt-12 md-flex">
+    <div class="mt-12 md:flex">
       <Form/>
+      <div class="md:w-1/2 md:h-screen ml-2">
+        <h3 class="font-black text-black dark:text-white text-3xl text-center">
+          Administra tus pacientes
+        </h3>
+        <div v-if="patients.length > 0">
+
+        </div>
+        <p v-else class="mt-10 text-2xl">No hay pacientes</p>
+      </div>
     </div>
   </div>
 </template>
