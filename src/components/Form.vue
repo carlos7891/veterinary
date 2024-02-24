@@ -7,21 +7,45 @@
     message:''
   })
 
-  const patient = reactive({
-    name:'',
-    owner:'',
-    email:'',
-    date:'',
-    symptoms:''
+  const emit = defineEmits([
+    'update:name',
+    'update:owner',
+    'update:email',
+    'update:date',
+    'update:symptoms',
+    'save-patient'
+  ])
+
+  const props = defineProps({
+    name: {
+      type:String,
+      required:true
+    },
+    owner: {
+      type:String,
+      required:true
+    },
+    email: {
+      type:String,
+      required:true
+    },
+    date: {
+      type:String,
+      required:true
+    },
+    symptoms: {
+      type:String,
+      required:true
+    },
   })
 
   const validateForm = () => {
-    if(Object.values(patient).includes('')){
+    if(Object.values(props).includes('')){
       alert.message = 'Todos los campos son obligatorios'
       alert.type = 'error'
       return
     }
-    console.log('enviando');
+    emit('save-patient')
   }
 
 </script>
@@ -49,7 +73,8 @@
           id="pet_name"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="Nombre de la mascota"
-          v-model="patient.name"
+          :value="name"
+          @input="$emit('update:name', $event.target.value)"
         />
       </div>
       <div class="mb-6">
@@ -63,7 +88,8 @@
           id="owner_name"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="Nombre del propietario"
-          v-model="patient.owner"
+          :value="owner"
+          @input="$emit('update:owner', $event.target.value)"
         />
       </div>
       <div class="mb-6">
@@ -77,7 +103,8 @@
           id="email"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="juan123@yopmail.com"
-          v-model="patient.email"
+          :value="email"
+          @input="$emit('update:email', $event.target.value)"
         />
       </div>
       <div class="mb-6">
@@ -91,8 +118,9 @@
             type="date"
             id="release_date"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="juan123@yopmail.com"
-            v-model="patient.date"
+            placeholder=""
+            :value="date"
+            @input="$emit('update:date', $event.target.value)"
           />
         </div>
       </div>
@@ -107,7 +135,8 @@
           id="symptoms"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 h-40"
           placeholder="Describe los sintomas"
-          v-model="patient.symptoms"
+          :value="symptoms"
+          @input="$emit('update:symptoms', $event.target.value)"
         />
       </div>
       <button
