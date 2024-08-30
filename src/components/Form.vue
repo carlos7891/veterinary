@@ -1,5 +1,5 @@
 <script setup>
-  import { reactive } from 'vue'
+  import { reactive, computed } from 'vue'
   import Alert from './Alert.vue'
 
   const alert = reactive ({
@@ -17,6 +17,10 @@
   ])
 
   const props = defineProps({
+    id: {
+      type:[String, null],
+      required:true,
+    },
     name: {
       type:String,
       required:true
@@ -46,7 +50,19 @@
       return
     }
     emit('save-patient')
+    alert.message = 'Paciente Almacenado Exitosamente'
+
+    setTimeout(() => {
+      Object.assign(alert, {
+            type:'',
+            message:''
+      })
+    }, 3000)
   }
+
+  const editing = computed(() => {
+    return props.id
+  })
 
 </script>
 
@@ -143,8 +159,9 @@
         type="submit"
         class="text-white bg-indigo-600 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-800 dark:focus:ring-blue-800"
       >
-        Registrar Paciente
+        {{editing ? 'Guardar Cambios': 'Registrar Paciente'}}
       </button>
+      {{ editing }}
     </form>
   </div>
 </template>
