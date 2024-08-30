@@ -1,12 +1,14 @@
 <script setup>
+  import { ref, reactive, watch, onMounted } from 'vue'
+  import { uid } from 'uid'
   import Header from './components/Header.vue'
   import Form from './components/Form.vue'
   import Patient from './components/Patient.vue'
-  import { ref, reactive } from 'vue'
 
   const patients = ref ([])
 
   const patient = reactive({
+    id: null,
     name:'',
     owner:'',
     email:'',
@@ -14,9 +16,29 @@
     symptoms:''
   })
 
+  watch(patients, () => {
+    saveLocalStorage()
+  }, {
+    deep:true
+  }) 
+
+  onMounted(() => {
+    const patientsStorage = localStorage.getItem('patients')
+    if(patientsStorage){
+      patients.value = JSON.parse(patientsStorage)
+    }
+  })
+
   const savePatient = () => {
-    patients.value.push({...patient})
+    if(patient.id) {
+      const { id } = patient
+      const i = patients.value.findIndex((patient) => patient.id === id )
+      patients.value[i] = { ...patient}
+    } else {
+      patients.value.push({ ...patient, id: uid() })
+    }
     Object.assign(patient, {
+      id: null,
       name:'',
       owner:'',
       email:'',
@@ -24,6 +46,19 @@
       symptoms:''
     })
   }
+
+  const updatePatient = (id) => {
+    const editPatient = patients.value.filter(patient => patient.id === id)[0]
+    Object.assign(patient, editPatient)
+  }
+
+  const deletePatient = (id) => {
+    patients.value = patients.value.filter(patient => patient.id !== id)
+  }
+
+  const saveLocalStorage = () => {
+    localStorage.setItem('patients', JSON.stringify(patients.value))
+  } 
 
 </script>
 
@@ -38,6 +73,7 @@
         v-model:date = "patient.date"
         v-model:symptoms = "patient.symptoms"
         @save-patient = "savePatient"
+        :id="patient.id"
       />
       <div class="md:w-1/2 md:h-screen ml-2">
         <h3 class="font-black text-black dark:text-white text-3xl text-center">
@@ -51,6 +87,8 @@
           <Patient
             v-for="patient in patients"
             :patient="patient"
+            @update-patient = "updatePatient"
+            @delete-patient = "deletePatient"
           />
         </div>
         <p v-else class="mt-10 text-2xl text-black dark:text-white">No hay pacientes</p>
